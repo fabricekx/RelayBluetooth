@@ -22,7 +22,7 @@ const App = () => {
     disconnectFromDevice,
   } = useBLE();
   const {relais1Close, relais1Open, relais2Close, relais2Open, relais1State, relais2State} = relais();
-
+const [poussoir, setPoussoir] = useState(true) // true pour boutton poussoir, false pour boutton bascule
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const scanForDevices = async () => {
@@ -46,13 +46,25 @@ const App = () => {
       <View style={styles.heartRateTitleWrapper}>
         {connectedDevice ? (
           <>
-            {/* <PulseIndicator /> */}
-            <Text style={styles.heartRateTitleText}>Test des relais</Text>
-            <View>
-              <TouchableOpacity style={styles.ctaButton} onPress={relais1State=== false ? () => relais1Close(connectedDevice) : () => relais1Open(connectedDevice)}> <Text>{relais1State === false ? "Relais 1 on" : "Relais 1 off" }</Text></TouchableOpacity>
-              <TouchableOpacity style={styles.ctaButton} onPress={relais2State=== false ? () => relais2Close(connectedDevice) : () => relais2Open(connectedDevice)}> <Text>{relais2State === false ? "Relais 2 on" : "Relais 2 off" }</Text></TouchableOpacity>
-            </View>
+            <Text style={styles.heartRateTitleText}>Type de boutton: </Text>
+            <TouchableOpacity style={styles.ctaButtonOff} onPress={() => setPoussoir(!poussoir)}><Text>{poussoir === true ? "Poussoir" : "Bascule"}</Text></TouchableOpacity>
+            { poussoir ? (<View>
+              <TouchableOpacity style={relais1State=== false ? styles.ctaButtonOff : styles.ctaButtonOn} 
+              onPressIn={ () => relais1Close(connectedDevice)} onPressOut={() => relais1Open(connectedDevice)}>
+                 <Text style={styles.ctaButtonText}>{relais1State === false ? "Relais 1 Off" : "Relais 1 On" }</Text>
+                 </TouchableOpacity>
+              <TouchableOpacity style={relais2State=== false ? styles.ctaButtonOff : styles.ctaButtonOn}
+               onPressIn={ () => relais2Close(connectedDevice) } onPressOut={() => relais2Open(connectedDevice)}>
+                 <Text style={styles.ctaButtonText}>{relais2State === false ? "Relais 2 Off" : "Relais 2 On" }</Text>
+                 </TouchableOpacity>
+            </View>) : (<View>
+              <TouchableOpacity style={relais1State=== false ? styles.ctaButtonOff : styles.ctaButtonOn} onPress={relais1State=== false ? () => relais1Close(connectedDevice) : () => relais1Open(connectedDevice)}> <Text style={styles.ctaButtonText}>{relais1State === false ? "Relais 1 Off" : "Relais 1 On" }</Text></TouchableOpacity>
+              <TouchableOpacity style={relais2State=== false ? styles.ctaButtonOff : styles.ctaButtonOn} onPress={relais2State=== false ? () => relais2Close(connectedDevice) : () => relais2Open(connectedDevice)}> <Text style={styles.ctaButtonText}>{relais2State === false ? "Relais 2 Off" : "Relais 2 On" }</Text></TouchableOpacity>
+            </View> )
+            
+             }
           </>
+          
         ) : (
           <Text style={styles.heartRateTitleText}>
             Please Connect to a Bluetoot peripherical
@@ -106,6 +118,27 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 5,
     borderRadius: 8,
+  },
+  ctaButtonOn: {
+    backgroundColor: "#1ee617",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
+    marginHorizontal: 20,
+    marginBottom: 5,
+    borderRadius: 8,
+    padding :5
+
+  },
+  ctaButtonOff: {
+    backgroundColor: "#495249",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
+    marginHorizontal: 20,
+    marginBottom: 5,
+    borderRadius: 8,
+    padding :5
   },
   ctaButtonText: {
     fontSize: 18,

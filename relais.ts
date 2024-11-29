@@ -9,7 +9,6 @@ function relais()  {
   const [relais2State, setRelais2State] = useState (false)
 
 const relais1Close = async (device: Device) => {
-  console.log(device)
   const serviceUUID = "0000ffe0-0000-1000-8000-00805f9b34fb"; // Service UUID
   const characteristicUUID = "0000ffe1-0000-1000-8000-00805f9b34fb"; // Characteristic UUID
   const commandeHex = "A00101A2"; // Commande pour fermer le relais 1 en hexadécimal
