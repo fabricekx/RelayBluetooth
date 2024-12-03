@@ -101,7 +101,7 @@ function useBLE(): BluetoothLowEnergyApi {
       if (error) {
         console.log(error);
       }
-      if (device && device.name?.includes("JDY")) {
+      if (device && (device.name?.includes("JDY") || device.name?.includes("BLE") )) {
         setAllDevices((prevState: Device[]) => {
           if (!isDuplicteDevice(prevState, device)) {
             return [...prevState, device];
@@ -131,37 +131,10 @@ function useBLE(): BluetoothLowEnergyApi {
     if (connectedDevice) {
       bleManager.cancelDeviceConnection(connectedDevice.id);
       setConnectedDevice(null);
-    //   setHeartRate(0);
     }
   };
 
-//   const onHeartRateUpdate = (
-//     error: BleError | null,
-//     characteristic: Characteristic | null
-//   ) => {
-//     if (error) {
-//       console.log(error);
-//       return -1;
-//     } else if (!characteristic?.value) {
-//       console.log("No Data was recieved");
-//       return -1;
-//     }
 
-//     const rawData = base64.decode(characteristic.value);
-//     let innerHeartRate: number = -1;
-
-//     const firstBitValue: number = Number(rawData) & 0x01;
-
-//     if (firstBitValue === 0) {
-//       innerHeartRate = rawData[1].charCodeAt(0);
-//     } else {
-//       innerHeartRate =
-//         Number(rawData[1].charCodeAt(0) << 8) +
-//         Number(rawData[2].charCodeAt(2));
-//     }
-
-//     setHeartRate(innerHeartRate);
-//   };
 
   const viewDeviceServices = async (device: Device) => { // Le plus facile est d'utiliser un utilitaire, comme nRF Connect
     if (device) {
